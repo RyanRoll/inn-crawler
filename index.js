@@ -114,14 +114,14 @@ async function check() {
 }
 
 function showRunning() {
-  const icons = ['●', '○']
+  // const icons = ['●', '○']
+  const icons = ['⠙', '⠘', '⠰', '⠴', '⠤', '⠦', '⠆', '⠃', '⠋', '⠉']
   let x = 0
-  let loading = ''
   return setInterval(() => {
-    loading += icons[x++]
-    process.stdout.write(chalk.yellow(`\rRunning ${loading}`))
+    // loading += icons[x++]
+    process.stdout.write(chalk.yellow(`\rRunning... ${icons[x++]}`))
     x %= icons.length
-  }, 500)
+  }, 50)
 }
 
 console.log(
@@ -139,4 +139,5 @@ console.log(
 )
 
 // go
+// showRunning()
 check()
