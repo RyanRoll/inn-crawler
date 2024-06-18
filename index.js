@@ -1,17 +1,18 @@
 import { JSDOM } from 'jsdom'
 import notifier from 'node-notifier'
 import chalk from 'chalk'
-// import nodemailer  from 'nodemailer'
+import nodemailer from 'nodemailer'
 
 // for test
 // const url = 'https://developer.mozilla.org/en-US/docs/Web/API/Response'
 
-const defaultIntervalTime = 60 * 60
+const defaultIntervalTime = (60 * 60) / 2 // 0.5H
 
 // args
 const [
   ,
   ,
+  pass,
   sel_area = '27',
   sel_area_txt = '長野',
   intervalTime = defaultIntervalTime,
@@ -36,6 +37,8 @@ async function crawl() {
   const dom = new JSDOM(html)
   const { document } = dom.window
 
+  const now = new Date().toLocaleString()
+  console.log(chalk.bgWhite.bold('\r\n\r\n查詢時間:', now))
   console.log(
     chalk.bgCyan.bold('目標飯站:', document.querySelector(innPath)?.innerHTML),
   )
@@ -49,14 +52,42 @@ async function crawl() {
     ),
   )
   const vacancyInfo = document.querySelector(roomPath)?.innerHTML
-  console.log(chalk.white.bgRed.bold('房間剩餘:', vacancyInfo, '\r\n'))
+
   // show notification if available
   if (vacancyInfo.includes('剩')) {
+    console.log(chalk.white.bgGreen.bold('房間剩餘:', vacancyInfo, '\r\n'))
+    sendEmail()
     showNotification()
+  } else {
+    console.log(chalk.white.bgRed.bold('房間剩餘:', vacancyInfo, '\r\n'))
   }
 }
 
-async function sendEmail() {}
+async function sendEmail() {
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'visionroll@gmail.com',
+      pass,
+    },
+  })
+
+  const mailOptions = {
+    from: 'visionroll@gmail.com',
+    // to: 'visionroll@gmail.com',
+    to: 'Alumi.pu@gmail.com',
+    subject: '[爬蟲] - 空房通知!!!!!!!!!!!',
+    text: '還不快點去訂房: https://www.toyoko-inn.com/china/search/result?chck_in=2024/11/06&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=27&sel_area_txt=%E9%95%B7%E9%87%8E&sel_htl=&rd_smk=&sel_room_clss_Id=20&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=on&prcssng_dvsn=dtl&',
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Sent Email Error:', error.message)
+    } else {
+      console.log('Email sent:', info.response)
+    }
+  })
+}
 
 function showNotification() {
   notifier.notify({
@@ -67,16 +98,30 @@ function showNotification() {
   process.exit(0)
 }
 
-function check() {
+async function check() {
   const time = +intervalTime
   if (!time) {
     console.log(chalk.white.bgRed.bold(`指定的間隔時間不對 - ${time}`))
     process.exit(0)
   }
-  crawl()
-  setInterval(() => {
-    crawl()
+  await crawl()
+  let runningTimer = showRunning()
+  setInterval(async () => {
+    clearInterval(runningTimer)
+    await crawl()
+    runningTimer = showRunning()
   }, time * 1000)
+}
+
+function showRunning() {
+  const icons = ['●', '○']
+  let x = 0
+  let loading = ''
+  return setInterval(() => {
+    loading += icons[x++]
+    process.stdout.write(chalk.yellow(`\rRunning ${loading}`))
+    x %= icons.length
+  }, 500)
 }
 
 console.log(
@@ -89,7 +134,7 @@ console.log(
     sel_area_txt,
     '[每次間隔]',
     `${+intervalTime / 3600}小時`,
-    '>\r\n',
+    '>',
   ),
 )
 
