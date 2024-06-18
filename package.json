@@ -1,0 +1,22 @@
+{
+  "name": "inn-crawler",
+  "version": "1.0.0",
+  "description": "look three small",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RyanRoll/inn-crawler.git"
+  },
+  "author": "Ryan Roll",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "jsdom": "^24.1.0",
+    "node-notifier": "^10.0.1",
+    "nodemailer": "^6.9.13"
+  }
+}
