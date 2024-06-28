@@ -6,7 +6,7 @@
 4. 使用命令字元進入該資料夾 inn-crawler
 5. 執行 $ npm install
 
-## 更新程式 - 新手 - 僅限單一飯店
+## 更新程式 - 新手
 
 1. 再次下載程式並解壓縮: [https://github.com/RyanRoll/inn-crawler/archive/refs/heads/master.zip](https://github.com/RyanRoll/inn-crawler/archive/refs/heads/master.zip)
 2. 使用命令字元進入該資料夾 inn-crawler
