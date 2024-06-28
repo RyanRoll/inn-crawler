@@ -13,23 +13,24 @@ const [
   ,
   ,
   pass,
-  sel_area = '27',
-  sel_area_txt = '長野',
+  sel_area = '30',
+  sel_area_txt = '愛知',
   intervalTime = defaultIntervalTime,
   email,
   password,
 ] = process.argv
 
 // inn's target URL
-const url = `https://www.toyoko-inn.com/china/search/result?chck_in=2024/11/06&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=${sel_area}&sel_area_txt=${encodeURIComponent(
-  sel_area_txt,
-)}&sel_htl=&rd_smk=&sel_room_clss_Id=20&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=on&prcssng_dvsn=dtl&`
 
-const innPath = '#mainArea > section:nth-child(11) > h2 > em > a'
+const url = `https://www.toyoko-inn.com/china/search/result?lcl_id=zh_TW&chck_in=2024/11/02&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=${sel_area}&sel_area_txt=${encodeURIComponent(
+  sel_area_txt,
+)}}&sel_htl=00092&rd_smk=&sel_room_clss_Id=&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=&prcssng_dvsn=dtl&`
+
+const innPath = '#mainArea > section:nth-child(6) > h2 > em > a'
 const roomTypePath =
-  '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(1) > td:nth-child(1)'
+  '#mainArea > section:nth-child(6) > div.tableWrap01 > table > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(1)'
 const roomPath =
-  '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(2) > td > table > tbody > tr > td:nth-child(2) > span'
+  '#mainArea > section:nth-child(6) > div.tableWrap01 > table > tbody:nth-child(3) > tr:nth-child(2) > td > table > tbody > tr > td:nth-child(2) > span'
 
 async function crawl() {
   const response = await fetch(url)
@@ -40,7 +41,13 @@ async function crawl() {
   const now = new Date().toLocaleString()
   console.log(chalk.bgWhite.bold('\r\n\r\n查詢時間:', now))
   console.log(
-    chalk.bgCyan.bold('目標飯站:', document.querySelector(innPath)?.innerHTML),
+    chalk.bgCyan.bold('目標飯店:', document.querySelector(innPath)?.innerHTML),
+  )
+  console.log(
+    chalk.bgCyan.bold(
+      '入住日期:',
+      url.match(/chck_in=([^&]+)+&/)?.[1] ?? '???',
+    ),
   )
   console.log(
     chalk.bgCyan.bold(
@@ -49,6 +56,7 @@ async function crawl() {
         .querySelector(roomTypePath)
         ?.innerHTML?.split('\t')?.[0]
         ?.replace?.('<br>', '-'),
+      '(禁煙)',
     ),
   )
   const vacancyInfo = document.querySelector(roomPath)?.innerHTML
