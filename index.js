@@ -6,7 +6,7 @@ import nodemailer from 'nodemailer'
 // for test
 // const url = 'https://developer.mozilla.org/en-US/docs/Web/API/Response'
 
-const defaultIntervalTime = (60 * 60) / 2 // 0.5H
+const defaultIntervalTime = 60 * 5 // 5 minutes
 
 // args
 const [
@@ -114,7 +114,6 @@ async function check() {
 }
 
 function showRunning() {
-  // const icons = ['●', '○']
   const icons = ['⠙', '⠘', '⠰', '⠴', '⠤', '⠦', '⠆', '⠃', '⠋', '⠉']
   let x = 0
   return setInterval(() => {
@@ -133,7 +132,7 @@ console.log(
     '[sel_area_txt]',
     sel_area_txt,
     '[每次間隔]',
-    `${+intervalTime / 3600}小時`,
+    `${+intervalTime / 60}分鐘`,
     '>',
   ),
 )
