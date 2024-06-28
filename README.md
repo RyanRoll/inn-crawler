@@ -6,7 +6,7 @@
 4. 使用命令字元進入該資料夾 inn-crawler
 5. 執行 $ npm install
 
-## 更新程式 - 新手
+## 更新程式 - 新手 - 僅限單一飯店
 
 1. 再次下載程式並解壓縮: [https://github.com/RyanRoll/inn-crawler/archive/refs/heads/master.zip](https://github.com/RyanRoll/inn-crawler/archive/refs/heads/master.zip)
 2. 使用命令字元進入該資料夾 inn-crawler
@@ -16,7 +16,11 @@
 
 1. 使用命令字元進入該資料夾 inn-crawler
 2. $ git pull
-3. $ npm install
+
+- $ git checkout master // for 長野
+- $ git checkout inn-30 // for 愛知
+
+5. $ npm install
 
 ## 執行爬蟲
 
@@ -26,7 +30,11 @@
 
 $ npm start "QQQQ QQQQ CCCC HHHH"
 
-// or with parameters pass="", sel_area=27, sel_area_txt=長野, intervalTime=0.5H
+// or with parameters pass="", sel_area=27, sel_area_txt=長野, intervalTime=300    // 300 is 5 minutes
 
 $ npm start "QQQQ QQQQ CCCC HHHH" 27 長野 1800
+
+// or with parameters pass="", sel_area=30, sel_area_txt=愛知, intervalTime=300    // 300 is 5 minutes
+
+$ npm start "QQQQ QQQQ CCCC HHHH" 30 愛知 300
 ```

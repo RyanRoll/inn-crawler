@@ -40,7 +40,13 @@ async function crawl() {
   const now = new Date().toLocaleString()
   console.log(chalk.bgWhite.bold('\r\n\r\n查詢時間:', now))
   console.log(
-    chalk.bgCyan.bold('目標飯站:', document.querySelector(innPath)?.innerHTML),
+    chalk.bgCyan.bold('目標飯店:', document.querySelector(innPath)?.innerHTML),
+  )
+  console.log(
+    chalk.bgCyan.bold(
+      '入住日期:',
+      url.match(/chck_in=([^&]+)+&/)?.[1] ?? '???',
+    ),
   )
   console.log(
     chalk.bgCyan.bold(
@@ -49,6 +55,7 @@ async function crawl() {
         .querySelector(roomTypePath)
         ?.innerHTML?.split('\t')?.[0]
         ?.replace?.('<br>', '-'),
+      '(禁煙)',
     ),
   )
   const vacancyInfo = document.querySelector(roomPath)?.innerHTML
