@@ -21,6 +21,7 @@
 ## 更新程式 - 如果你會 GIT
 
 1. $ git pull
+2. $ npm install
 
 ## 執行爬蟲
 
