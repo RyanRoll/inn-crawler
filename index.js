@@ -8,35 +8,50 @@ import nodemailer from 'nodemailer'
 
 const defaultIntervalTime = 60 * 5 // 5 minutes
 
+const selAreaTextMap = {
+  27: '長野',
+  30: '愛知',
+}
+
 // args
 const [
   ,
   ,
   pass,
   sel_area = '27',
-  sel_area_txt = '長野',
+  sel_area_txt = selAreaTextMap[sel_area],
   intervalTime = defaultIntervalTime,
   email,
   password,
 ] = process.argv
 
-// inn's target URL
-const url = `https://www.toyoko-inn.com/china/search/result?chck_in=2024/11/06&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=${sel_area}&sel_area_txt=${encodeURIComponent(
-  sel_area_txt,
-)}&sel_htl=&rd_smk=&sel_room_clss_Id=20&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=on&prcssng_dvsn=dtl&`
+const selAreaText = encodeURIComponent(sel_area_txt)
 
-const innPath = '#mainArea > section:nth-child(11) > h2 > em > a'
-const roomTypePath =
-  '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(1) > td:nth-child(1)'
-const roomPath =
-  '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(2) > td > table > tbody > tr > td:nth-child(2) > span'
+const areaMap = {
+  27: {
+    url: `https://www.toyoko-inn.com/china/search/result?chck_in=2024/11/06&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=${sel_area}&sel_area_txt=${selAreaText}&sel_htl=&rd_smk=&sel_room_clss_Id=20&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=on&prcssng_dvsn=dtl&`,
+    innPath: '#mainArea > section:nth-child(11) > h2 > em > a',
+    roomTypePath:
+      '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(1) > td:nth-child(1)',
+    roomPath:
+      '#mainArea > section:nth-child(11) > div.tableWrap01 > table > tbody.clubCardCell > tr:nth-child(2) > td > table > tbody > tr > td:nth-child(2) > span',
+  },
+  30: {
+    url: `https://www.toyoko-inn.com/china/search/result?lcl_id=zh_TW&chck_in=2024/11/02&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=${sel_area}&sel_area_txt=${selAreaText}&sel_htl=00092&rd_smk=&sel_room_clss_Id=&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=&prcssng_dvsn=dtl&`,
+    innPath: '#mainArea > section:nth-child(6) > h2 > em > a',
+    roomTypePath:
+      '#mainArea > section:nth-child(6) > div.tableWrap01 > table > tbody:nth-child(3) > tr:nth-child(1) > td:nth-child(1)',
+    roomPath:
+      '#mainArea > section:nth-child(6) > div.tableWrap01 > table > tbody:nth-child(3) > tr:nth-child(2) > td > table > tbody > tr > td:nth-child(2) > span',
+  },
+}
 
 async function crawl() {
+  const { url, innPath, roomTypePath, roomPath } = areaMap[sel_area]
   const response = await fetch(url)
   const html = await response.text()
   const dom = new JSDOM(html)
   const { document } = dom.window
-
   const now = new Date().toLocaleString()
   console.log(chalk.bgWhite.bold('\r\n\r\n查詢時間:', now))
   console.log(
@@ -84,7 +99,7 @@ async function sendEmail() {
     // to: 'visionroll@gmail.com',
     to: 'Alumi.pu@gmail.com',
     subject: '[爬蟲] - 空房通知!!!!!!!!!!!',
-    text: '還不快點去訂房: https://www.toyoko-inn.com/china/search/result?chck_in=2024/11/06&inn_date=2&rsrv_num=1&sel_ldgngPpl=2&sel_area=27&sel_area_txt=%E9%95%B7%E9%87%8E&sel_htl=&rd_smk=&sel_room_clss_Id=20&sel_prkng=&sel_cnfrnc=&sel_hrtfll_room=&sel_whlchr=&sel_bath=&sel_rstrnt=&srch_key_word=&lttd=&lngtd=&pgn=1&sel_dtl_cndtn=on&prcssng_dvsn=dtl&',
+    text: '還不快點去訂房! https://www.toyoko-inn.com/',
   }
 
   transporter.sendMail(mailOptions, (error, info) => {

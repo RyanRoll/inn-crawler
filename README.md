@@ -12,29 +12,31 @@
 2. 使用命令字元進入該資料夾 inn-crawler
 3. 執行 $ npm install
 
-## 更新程式 - 如果你會 GIT 並下載好 NodeJS 和 GIT
+## 下載程式 - 如果你會 GIT 並下載好 NodeJS 和 GIT
 
-1. 使用命令字元進入該資料夾 inn-crawler
-2. $ git pull
+1. $ git clone https://github.com/RyanRoll/inn-crawler.git
+2. $ cd inn-crawler
+3. $ npm install
 
-- $ git checkout master // for 長野
-- $ git checkout inn-30 // for 愛知
+## 更新程式 - 如果你會 GIT
 
-5. $ npm install
+1. $ git pull
 
 ## 執行爬蟲
 
 ```bash
 
 // pass is required to send an email
+// for 長野 (預設)
 
 $ npm start "QQQQ QQQQ CCCC HHHH"
 
+// for 愛知
+
+$ npm start "QQQQ QQQQ CCCC HHHH" 30
+
+// 完整參數
 // or with parameters pass="", sel_area=27, sel_area_txt=長野, intervalTime=300    // 300 is 5 minutes
 
-$ npm start "QQQQ QQQQ CCCC HHHH" 27 長野 1800
-
-// or with parameters pass="", sel_area=30, sel_area_txt=愛知, intervalTime=300    // 300 is 5 minutes
-
-$ npm start "QQQQ QQQQ CCCC HHHH" 30 愛知 300
+$ npm start "QQQQ QQQQ CCCC HHHH" 27 長野 300
 ```
